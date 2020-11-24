@@ -2,4 +2,4 @@ import Config
 
 config :aoc,
   aoc_session:
-    "SESSION_HEADER"
+    "SESSION_HEADER_FROM_YOUR_COOKIES"
