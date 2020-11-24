@@ -22,6 +22,9 @@ erl_crash.dump
 # Ignore changes to config (SEKRETS)
 config/config.exs
 
+# Ignore cached data
+data/**/*
+
 # Ignore build artifacts
 advent_of_code_2018-*.tar
 erlang-solutions_2.0_all.deb
