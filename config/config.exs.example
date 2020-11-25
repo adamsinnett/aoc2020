@@ -1,5 +1,5 @@
 import Config
 
-config :aoc,
+config :advent_of_code,
   aoc_session:
     "SESSION_HEADER_FROM_YOUR_COOKIES"

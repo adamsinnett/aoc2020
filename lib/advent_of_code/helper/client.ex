@@ -1,18 +1,10 @@
 defmodule Client do
   def getInput(params) do
-    getInputUrl(params)
-    |> doInput
-  end
-
-  def postSubmit(params, part, answer) do
-    getSubmitUrl(params)
-    |> doSubmit(part, answer)
-    |> parseSubmit
-  end
-
-  defp doInput(url) do
     HTTPoison.start()
-    resp = HTTPoison.get!(url, %{}, hackney: [cookie: ["session=#{getSession()}"]])
+
+    resp =
+      getInputUrl(params)
+      |> HTTPoison.get!(%{}, hackney: [cookie: ["session=#{getSession()}"]])
 
     case resp do
       %HTTPoison.Response{status_code: 200, body: body} ->
@@ -23,13 +15,13 @@ defmodule Client do
     end
   end
 
-  defp doSubmit(url, part, answer) do
-    body = URI.encode_query(%{"level" => part, "answer" => answer})
+  def postSubmit(params, part, answer) do
+    HTTPoison.start()
 
     resp =
-      HTTPoison.post!(
-        url,
-        body,
+      getSubmitUrl(params)
+      |> HTTPoison.post!(
+        URI.encode_query(%{"level" => part, "answer" => answer}),
         %{"Content-Type" => "application/x-www-form-urlencoded"}
       )
 
@@ -44,8 +36,8 @@ defmodule Client do
 
   defp parseSubmit(response) do
     cond do
-      response =~ "That's not the right answer" -> {:error}
-      true -> {:ok}
+      response =~ "That's not the right answer" -> :error
+      true -> :ok
     end
   end
 
@@ -62,6 +54,6 @@ defmodule Client do
   end
 
   defp getSession() do
-    Application.get_env(:aoc, :aoc_session)
+    Application.get_env(:advent_of_code, :aoc_session)
   end
 end
