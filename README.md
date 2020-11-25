@@ -13,10 +13,10 @@ There are 25 modules, 25 tests, and 50 mix tasks.
 
 ```elixir
 defmodule AdventOfCode.Day01 do
-  def part1(args) do
+  def part1(_input) do
   end
 
-  def part2(args) do
+  def part2(_input) do
   end
 end
 ```
@@ -29,7 +29,7 @@ defmodule AdventOfCode.Day01Test do
 
   @tag :skip # Make sure to remove to run your test.
   test "part1" do
-    input = nil 
+    input = Input.getInput(2020, 1) 
     result = part1(input)
 
     assert result
@@ -37,7 +37,7 @@ defmodule AdventOfCode.Day01Test do
 
   @tag :skip # Make sure to remove to run your test.
   test "part2" do
-    input = nil 
+    input = Input.getInput(2020, 1) 
     result = part2(input)
 
     assert result
@@ -53,7 +53,7 @@ defmodule Mix.Tasks.D01.P1 do
 
   @shortdoc "Day 01 Part 1"
   def run(args) do
-    input = nil
+    input = Input.getInput(2020, 1)
 
     if Enum.member?(args, "-b"),
       do: Benchee.run(%{part_1: fn -> input |> part1() end}),

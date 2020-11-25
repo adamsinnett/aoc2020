@@ -1,8 +1,7 @@
 defmodule AdventOfCode.Day01 do
-  def part1(args) do
-    Input.getInput(2019, 9)
+  def part1(_input) do
   end
 
-  def part2(args) do
+  def part2(_input) do
   end
 end
