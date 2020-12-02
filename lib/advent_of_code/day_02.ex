@@ -1,10 +1,10 @@
 defmodule AdventOfCode.Day02 do
   def part1(input) do
-    Enum.count(input, &passwordIsValid(&1))
+    Enum.count(input, &isValidPassword?(&1))
   end
 
   def part2(input) do
-    Enum.count(input, &passwordIsValidTwo(&1))
+    Enum.count(input, &isValidPassword2?(&1))
   end
 
   def parseInput(input) do
@@ -16,20 +16,20 @@ defmodule AdventOfCode.Day02 do
   defp normalizeInput([range, rule, password]) do
     [min, max] = String.split(range, "-", trim: true)
 
-    [
+    {
       String.to_integer(min),
       String.to_integer(max),
       rule |> to_charlist() |> List.first(),
       to_charlist(password)
-    ]
+    }
   end
 
-  defp passwordIsValidTwo([min, max, letter, password]) do
+  defp isValidPassword2?({min, max, letter, password}) do
     Enum.at(password, min - 1) == letter !==
       (Enum.at(password, max - 1) == letter)
   end
 
-  defp passwordIsValid([min, max, rule, password]) do
+  defp isValidPassword?({min, max, rule, password}) do
     count =
       to_charlist(password)
       |> Enum.count(fn ch -> ch == rule end)
