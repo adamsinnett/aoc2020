@@ -4,4 +4,8 @@ defmodule AdventOfCode.Day14 do
 
   def part2(_input) do
   end
+
+  def parseInput(input) do
+    String.split(input, "\n", trim: true)
+  end
 end
