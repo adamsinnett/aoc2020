@@ -14,12 +14,32 @@ defmodule Cache do
     |> File.read!()
   end
 
+  def writeSubmitCache(input, params, part) do
+    getSubmitFilename(params, part)
+    |> File.write!(Poison.encode!(input))
+  end
+
+  def readSubmitCache(params, part) do
+    if not submitExists?(params, part) do
+      %{}
+    else
+      getSubmitFilename(params, part)
+      |> File.read!()
+      |> Poison.decode!()
+    end
+  end
+
+  def submitExists?(params, part) do
+    getSubmitFilename(params, part)
+    |> File.exists?()
+  end
+
   defp getInputFilename(params) do
     "#{getBaseDataDir()}/input/#{params.year}_#{params.day}.txt"
   end
 
-  defp getSubmitFilename(params) do
-    "#{getBaseDataDir()}/submit/#{params.year}_#{params.day}.txt"
+  defp getSubmitFilename(params, part) do
+    "#{getBaseDataDir()}/submit/#{params.year}_#{params.day}_#{part}.txt"
   end
 
   defp getBaseDataDir() do

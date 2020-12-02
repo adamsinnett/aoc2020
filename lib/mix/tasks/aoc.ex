@@ -10,11 +10,14 @@ defmodule Mix.Tasks.Aoc do
     module = String.to_atom("Elixir.AdventOfCode.Day" <> day)
     partFn = getPartFn(part)
 
+    parsed = apply(module, :parseInput, [input])
+
     if Enum.member?(rest, "-b") do
-      Benchee.run(%{part_1: fn -> apply(module, partFn, [input]) end})
+      Benchee.run(%{part_1: fn -> apply(module, partFn, [parsed]) end})
     else
-      apply(module, partFn, [input])
-      |> IO.inspect(label: "Results")
+      answer = apply(module, partFn, [parsed])
+      IO.puts("Answer: #{answer}")
+      Submit.submit(answer, 2020, day, part)
     end
   end
 

@@ -1,14 +1,21 @@
 defmodule Submit do
-  def submit(year, day, part, answer) do
+  def submit(answer, year, day, part) do
     params = Params.parse(year, day)
 
-    case part do
-      n when n == 1 or n == 2 -> doSubmit(part, answer)
-      _ -> throw("Don't understand what part you're trying to submit")
+    if part != "1" and not part != "2", do: throw("unknown part")
+
+    submitted = Cache.readSubmitCache(params, part)
+
+    case submitted[answer] do
+      nil -> doSubmit(params, part, answer, submitted)
+      result -> result
     end
   end
 
-  defp doSubmit(_part, _answer) do
-    # TODO
+  defp doSubmit(params, part, answer, submitted) do
+    IO.puts("Submitting #{answer} for Day #{params.day} part #{part}")
+    response = Client.postSubmit(params, part, answer)
+    Cache.writeSubmitCache(Map.put(submitted, answer, response), params, part)
+    response
   end
 end

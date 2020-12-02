@@ -1,17 +1,15 @@
 defmodule AdventOfCode.Day01 do
   def part1(input) do
-    numbers = parseInput(input)
-    {first, second} = find2020(numbers, 2020)
-    IO.puts(first * second)
+    {first, second} = find2020(input, 2020)
+    first * second
   end
 
   def part2(input) do
-    numbers = parseInput(input)
-    {first, second, third} = findThree2020(numbers)
-    IO.puts(first * second * third)
+    {first, second, third} = findThree2020(input)
+    first * second * third
   end
 
-  defp parseInput(input) do
+  def parseInput(input) do
     String.trim(input)
     |> String.split("\n")
     |> Enum.map(&Integer.parse(&1))

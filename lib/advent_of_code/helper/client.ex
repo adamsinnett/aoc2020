@@ -22,12 +22,13 @@ defmodule Client do
       getSubmitUrl(params)
       |> HTTPoison.post!(
         URI.encode_query(%{"level" => part, "answer" => answer}),
-        %{"Content-Type" => "application/x-www-form-urlencoded"}
+        %{"Content-Type" => "application/x-www-form-urlencoded"},
+        hackney: [cookie: ["session=#{getSession()}"]]
       )
 
     case resp do
       %HTTPoison.Response{status_code: 200, body: body} ->
-        body
+        parseSubmit(body)
 
       %HTTPoison.Response{status_code: status, body: body} ->
         throw("AOC website rejected us with status #{status} for #{body}")
