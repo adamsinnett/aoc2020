@@ -17,7 +17,7 @@ defmodule Mix.Tasks.Aoc do
     else
       answer = apply(module, partFn, [parsed])
       IO.puts("Answer: #{answer}")
-      Submit.submit(answer, 2020, day, part)
+      # Submit.submit(answer, 2020, day, part) # Submit.submit(answer, 2020, day, part)
     end
   end
 
