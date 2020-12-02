@@ -21,8 +21,7 @@ defmodule AdventOfCode.Day02 do
     second = String.split(range, "-") |> List.last() |> Integer.parse() |> elem(0)
     list = to_charlist(password)
 
-    (Enum.at(list, first - 1) == letter and Enum.at(list, second - 1) !== letter) or
-      (Enum.at(list, first - 1) != letter and Enum.at(list, second - 1) !== letter)
+    Enum.at(list, first - 1) == letter !== (Enum.at(list, second - 1) == letter)
   end
 
   defp passwordIsValid([range, rule, password]) do
