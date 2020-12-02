@@ -1,42 +1,39 @@
 defmodule AdventOfCode.Day02 do
   def part1(input) do
-    Enum.filter(input, &passwordIsValid(&1))
-    |> length()
+    Enum.count(input, &passwordIsValid(&1))
   end
 
   def part2(input) do
-    Enum.filter(input, &passwordIsValidTwo(&1))
-    |> length()
+    Enum.count(input, &passwordIsValidTwo(&1))
   end
 
   def parseInput(input) do
-    String.trim(input)
-    |> String.split("\n")
+    String.split(input, "\n", trim: true)
     |> Enum.map(&String.split(&1, " "))
+    |> Enum.map(&normalizeInput(&1))
   end
 
-  defp passwordIsValidTwo([range, rule, password]) do
-    letter = String.first(rule) |> to_charlist() |> List.first()
-    first = String.split(range, "-") |> List.first() |> Integer.parse() |> elem(0)
-    second = String.split(range, "-") |> List.last() |> Integer.parse() |> elem(0)
-    list = to_charlist(password)
+  defp normalizeInput([range, rule, password]) do
+    [min, max] = String.split(range, "-", trim: true)
 
-    Enum.at(list, first - 1) == letter !== (Enum.at(list, second - 1) == letter)
+    [
+      String.to_integer(min),
+      String.to_integer(max),
+      rule |> to_charlist() |> List.first(),
+      to_charlist(password)
+    ]
   end
 
-  defp passwordIsValid([range, rule, password]) do
-    letter = String.first(rule) |> to_charlist() |> List.first()
-
-    to_charlist(password)
-    |> Enum.filter(fn ch -> ch == letter end)
-    |> length()
-    |> inRange?(range)
+  defp passwordIsValidTwo([min, max, letter, password]) do
+    Enum.at(password, min - 1) == letter !==
+      (Enum.at(password, max - 1) == letter)
   end
 
-  defp inRange?(length, range) do
-    min = String.split(range, "-") |> List.first() |> Integer.parse() |> elem(0)
-    max = String.split(range, "-") |> List.last() |> Integer.parse() |> elem(0)
+  defp passwordIsValid([min, max, rule, password]) do
+    count =
+      to_charlist(password)
+      |> Enum.count(fn ch -> ch == rule end)
 
-    length >= min and length <= max
+    count >= min and count <= max
   end
 end
