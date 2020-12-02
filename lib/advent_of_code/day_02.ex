@@ -22,7 +22,7 @@ defmodule AdventOfCode.Day02 do
     list = to_charlist(password)
 
     (Enum.at(list, first - 1) == letter and Enum.at(list, second - 1) !== letter) or
-    (Enum.at(list, first - 1) != letter and Enum.at(list, second - 1) == letter)
+      (Enum.at(list, first - 1) != letter and Enum.at(list, second - 1) !== letter)
   end
 
   defp passwordIsValid([range, rule, password]) do
@@ -31,10 +31,10 @@ defmodule AdventOfCode.Day02 do
     to_charlist(password)
     |> Enum.filter(fn ch -> ch == letter end)
     |> length()
-    |> isInRange(range)
+    |> inRange?(range)
   end
 
-  defp isInRange(length, range) do
+  defp inRange?(length, range) do
     min = String.split(range, "-") |> List.first() |> Integer.parse() |> elem(0)
     max = String.split(range, "-") |> List.last() |> Integer.parse() |> elem(0)
 
