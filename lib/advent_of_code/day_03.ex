@@ -5,7 +5,13 @@ defmodule AdventOfCode.Day03 do
   end
 
   def part2(input) do
-    positions = [{1, 1, 0, 0, 0}, {3, 1, 0, 0, 0}, {5, 1, 0, 0, 0}, {7, 1, 0, 0, 0}, {1, 2, 0, 0, 0}]
+    positions = [
+      {1, 1, 0, 0, 0},
+      {3, 1, 0, 0, 0},
+      {5, 1, 0, 0, 0},
+      {7, 1, 0, 0, 0},
+      {1, 2, 0, 0, 0}
+    ]
 
     Enum.map(positions, &countTreeAndKnight(&1, input))
     |> Enum.reduce(fn x, acc -> x * acc end)
