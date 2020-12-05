@@ -7,11 +7,9 @@ defmodule AdventOfCode.Day05 do
   def part2(input) do
     Enum.map(input, &resolveSeatNumber(&1))
     |> Enum.sort()
-    |> Enum.chunk_every(2, 1, :discard)
-    |> Enum.filter(fn [fir, sec] -> fir + 1 != sec end)
-    |> hd
-    |> hd
-    |> (fn neighbor -> neighbor + 1 end).()
+    |> Enum.chunk_every(2, 1)
+    |> Enum.find(fn [fir, sec] -> fir + 1 != sec end)
+    |> (fn [neighbor, _] -> neighbor + 1 end).()
   end
 
   def parseInput(input) do
