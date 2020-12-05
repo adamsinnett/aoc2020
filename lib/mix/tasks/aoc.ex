@@ -16,8 +16,7 @@ defmodule Mix.Tasks.Aoc do
       Benchee.run(%{part_1: fn -> apply(module, partFn, [parsed]) end})
     else
       answer = apply(module, partFn, [parsed])
-      IO.puts("Answer: #{answer}")
-      # Submit.submit(answer, 2020, day, part) # Submit.submit(answer, 2020, day, part)
+      Submit.submit(answer, 2020, day, part)
     end
   end
 

@@ -6,7 +6,7 @@ defmodule Submit do
 
     submitted = Cache.readSubmitCache(params, part)
 
-    case submitted[answer] do
+    case submitted[to_string(answer)] do
       nil -> doSubmit(params, part, answer, submitted)
       result -> result
     end
