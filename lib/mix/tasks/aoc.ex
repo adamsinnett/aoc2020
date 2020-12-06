@@ -5,9 +5,9 @@ defmodule Mix.Tasks.Aoc do
   def run(args) do
     [day, part | rest] = args
 
-    input = Input.getInput(2020, day)
-    day = to_string(day) |> String.pad_leading(2, "0")
-    module = String.to_atom("Elixir.AdventOfCode.Day" <> day)
+    input = Input.getInput(2015, day)
+    paddedDay = to_string(day) |> String.pad_leading(2, "0")
+    module = String.to_atom("Elixir.AdventOfCode.Day" <> paddedDay)
     partFn = getPartFn(part)
 
     parsed = apply(module, :parseInput, [input])
@@ -16,7 +16,10 @@ defmodule Mix.Tasks.Aoc do
       Benchee.run(%{part_1: fn -> apply(module, partFn, [parsed]) end})
     else
       answer = apply(module, partFn, [parsed])
-      Submit.submit(answer, 2020, day, part)
+      IO.puts("Answer: #{answer}")
+
+      Submit.submit(answer, 2015, day, part)
+      |> (fn ans -> IO.puts("Result: #{ans}") end).()
     end
   end
 
