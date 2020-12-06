@@ -4,16 +4,15 @@ defmodule AdventOfCode.Day06 do
     |> Enum.map(&String.to_charlist(&1))
     |> Enum.map(&Enum.uniq(&1))
     |> Enum.map(&length(&1))
-    |> Enum.reduce(0, fn x, acc -> acc + x end)
+    |> Enum.sum
   end
 
   def part2(input) do
     Enum.map(input, &String.split(&1))
     |> Enum.map(&mapify(&1))
     |> Enum.map(&intersect(&1))
-    |> Enum.map(&MapSet.to_list(&1))
-    |> Enum.map(&length(&1))
-    |> Enum.reduce(0, fn x, acc -> acc + x end)
+    |> Enum.map(&MapSet.size(&1))
+    |> Enum.sum
   end
 
   def parseInput(input) do
