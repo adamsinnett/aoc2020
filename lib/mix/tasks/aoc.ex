@@ -5,7 +5,7 @@ defmodule Mix.Tasks.Aoc do
   def run(args) do
     [day, part | rest] = args
 
-    input = Input.getInput(2015, day)
+    input = Input.getInput(2020, day)
     paddedDay = to_string(day) |> String.pad_leading(2, "0")
     module = String.to_atom("Elixir.AdventOfCode.Day" <> paddedDay)
     partFn = getPartFn(part)
@@ -18,7 +18,7 @@ defmodule Mix.Tasks.Aoc do
       answer = apply(module, partFn, [parsed])
       IO.puts("Answer: #{answer}")
 
-      Submit.submit(answer, 2015, day, part)
+      Submit.submit(answer, 2020, day, part)
       |> (fn ans -> IO.puts("Result: #{ans}") end).()
     end
   end
