@@ -4,7 +4,7 @@ defmodule AdventOfCode.Day06 do
     |> Enum.map(&String.to_charlist(&1))
     |> Enum.map(&Enum.uniq(&1))
     |> Enum.map(&length(&1))
-    |> Enum.sum
+    |> Enum.sum()
   end
 
   def part2(input) do
@@ -12,7 +12,7 @@ defmodule AdventOfCode.Day06 do
     |> Enum.map(&mapify(&1))
     |> Enum.map(&intersect(&1))
     |> Enum.map(&MapSet.size(&1))
-    |> Enum.sum
+    |> Enum.sum()
   end
 
   def parseInput(input) do
@@ -24,6 +24,6 @@ defmodule AdventOfCode.Day06 do
   end
 
   defp intersect(decls) do
-   Enum.reduce(decls, fn decl, acc -> MapSet.intersection(acc, decl) end)
+    Enum.reduce(decls, fn decl, acc -> MapSet.intersection(acc, decl) end)
   end
 end
