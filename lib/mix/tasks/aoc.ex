@@ -18,8 +18,14 @@ defmodule Mix.Tasks.Aoc do
       answer = apply(module, partFn, [parsed])
       IO.puts("Answer: #{answer}")
 
-      Submit.submit(answer, 2020, day, part)
-      |> (fn ans -> IO.puts("Result: #{ans}") end).()
+      case length(rest) do
+        1 ->
+          Submit.submit(answer, 2015, day, part)
+          |> (fn ans -> IO.puts("Result: #{ans}") end).()
+
+        _ ->
+          IO.puts("not submitted")
+      end
     end
   end
 

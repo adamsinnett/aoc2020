@@ -1,41 +1,62 @@
 defmodule AdventOfCode.Day07 do
-  def part1(input) do
-    bagTree =
-      Enum.reject(input, &String.contains?(&1, "no other bags"))
-      |> Enum.map(&String.replace(&1, "bags", "bag"))
-      |> Enum.map(&String.replace(&1, ".", ""))
-      |> Enum.map(&String.split(&1, "contain", trim: true))
-      |> Enum.reduce(%{}, &intoTree(&1, &2))
-
-    findEdgeCount(bagTree, "shiny gold bag")
-    |> length
+  def part1(bags) do
+    Enum.map(Map.keys(bags), &dfs(bags, &1, "shiny gold bag"))
+    |> Enum.sum()
   end
 
-  def part2(_input) do
+  def part2(bags) do
+    countInteriorBags(bags, "shiny gold bag")
   end
 
   def parseInput(input) do
     String.split(input, "\n", trim: true)
+    |> Enum.reject(&String.contains?(&1, "no other bags"))
+    |> Enum.map(&String.replace(&1, "bags", "bag"))
+    |> Enum.map(&String.replace(&1, ".", ""))
+    |> Enum.map(&String.split(&1, "contain", trim: true))
+    |> Enum.reduce(%{}, &intoTree(&1, &2))
   end
 
-  defp findEdgeCount(tree, root) do
+  def countInteriorBags(bagtree, root) do
+    case Map.fetch(bagtree, root) do
+      {:ok, bags} ->
+        Enum.reduce(bags, 0, fn [num, bag], acc ->
+          acc + String.to_integer(num) + String.to_integer(num) * countInteriorBags(bagtree, bag)
+        end)
+
+      :error ->
+        0
+    end
+  end
+
+  defp dfs(tree, root, targetNode) do
     case Map.fetch(tree, root) do
-      {:ok, value} -> Enum.flat_map(value, &findEdgeCount(tree, &1))
-      :error -> [root]
+      {:ok, leaf} ->
+        case Enum.any?(leaf, fn [_, bag] -> bag == targetNode end) do
+          true ->
+            1
+
+          false ->
+            found =
+              Enum.map(leaf, fn [_, bag] -> dfs(tree, bag, targetNode) end)
+              |> Enum.any?(fn s -> s == 1 end)
+
+            case found do
+              true -> 1
+              false -> 0
+            end
+        end
+
+      :error ->
+        0
     end
   end
 
   defp intoTree([parent, nodes], acc) do
     bags =
-      String.replace(nodes, ~r/\s\d\s/, "")
-      |> String.split(",", trim: true)
-      |> Enum.map(&String.trim(&1))
+      String.split(nodes, ",", trim: true)
+      |> Enum.map(&String.split(&1, " ", parts: 2, trim: true))
 
-    Enum.reduce(bags, acc, fn bag, bagAcc ->
-      case Map.fetch(bagAcc, bag) do
-        {:ok, value} -> Map.put(bagAcc, bag, Enum.uniq(value ++ [String.trim(parent)]))
-        :error -> Map.put(bagAcc, bag, [String.trim(parent)])
-      end
-    end)
+    Map.put(acc, String.trim(parent), bags)
   end
 end
