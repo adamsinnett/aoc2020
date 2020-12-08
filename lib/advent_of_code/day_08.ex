@@ -1,6 +1,6 @@
 defmodule AdventOfCode.Day08 do
   def part1(stack) do
-    {acc, pos} = run(0, stack, 0, [])
+    {_, pos} = run(0, stack, 0, [])
     pos
   end
 
@@ -43,7 +43,7 @@ defmodule AdventOfCode.Day08 do
     List.replace_at(stack, idx, {op, arg})
   end
 
-  defp run(pos, stack, acc, history \\ []) do
+  defp run(pos, stack, acc, history) do
     if Enum.member?(history, pos) or pos >= length(stack) do
       {acc, pos}
     else
@@ -51,13 +51,13 @@ defmodule AdventOfCode.Day08 do
 
       case op do
         "acc" ->
-          run(pos + 1, stack, acc + arg, history ++ [pos])
+          run(pos + 1, stack, acc + arg, [pos | history])
 
         "jmp" ->
-          run(pos + arg, stack, acc, history ++ [pos])
+          run(pos + arg, stack, acc, [pos | history])
 
         "nop" ->
-          run(pos + 1, stack, acc, history ++ [pos])
+          run(pos + 1, stack, acc, [pos | history])
       end
     end
   end
