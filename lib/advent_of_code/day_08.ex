@@ -15,12 +15,9 @@ defmodule AdventOfCode.Day08 do
   end
 
   defp fixStack(stack, idx) do
-
     {op, arg} = Enum.at(stack, idx)
-    stack = swap(stack, idx, op, arg)
-    {acc, pos} = run(0, stack, 0, [])
+    {acc, pos} = run(0, swap(stack, idx, op, arg), 0, [])
 
-    IO.puts("checking #{idx} of #{length(stack)} got #{pos}")
     cond do
       pos == length(stack) ->
         acc
