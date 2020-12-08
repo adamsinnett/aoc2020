@@ -14,16 +14,15 @@ defmodule AdventOfCode.Day08 do
     |> Enum.map(fn [op, arg] -> {op, String.to_integer(arg)} end)
   end
 
+  # For performance we should probably move through the stack
+  # like [head], current, [tail]
   defp fixStack(stack, idx) do
     {op, arg} = Enum.at(stack, idx)
     {acc, pos} = run(0, swap(stack, idx, op, arg), 0, [])
 
-    cond do
-      pos == length(stack) ->
-        acc
-
-      true ->
-        fixStack(deswap(stack, idx, op, arg), idx + 1)
+    case pos == length(stack) do
+      true -> acc
+      false -> fixStack(deswap(stack, idx, op, arg), idx + 1)
     end
   end
 
