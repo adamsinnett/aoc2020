@@ -14,6 +14,8 @@ defmodule AdventOfCode.Day09 do
 
   # part 2
   defp findRange(range, [hd | tail], target) do
+    sum = Enum.sum(range)
+
     if sum > target do
       findRange(tl(range), [hd | tail], target)
     else
@@ -30,7 +32,7 @@ defmodule AdventOfCode.Day09 do
     end
   end
 
-  defp findRange(range, [], target) do
+  defp findRange(_, [], _) do
     IO.puts("oops")
   end
 
