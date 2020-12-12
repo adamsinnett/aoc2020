@@ -2,7 +2,6 @@ defmodule AdventOfCode.Day10 do
   use Agent
 
   def part1(input) do
-
     countIncrements(input, {0, 0})
     |> (fn {one, three} -> one * three end).()
   end
@@ -10,13 +9,15 @@ defmodule AdventOfCode.Day10 do
   def part2(input) do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
 
-    countPermutations(hd(input), tl(input))
+    (countPermutations(hd(input), tl(input)) / 2)
+    |> round
   end
 
   defp countPermutations(_, []), do: 1
 
   defp countPermutations(curr, [hd | tail]) do
-    memoized = Agent.get(__MODULE__, &(Map.get(&1, curr)))
+    memoized = Agent.get(__MODULE__, &Map.get(&1, curr))
+
     if memoized do
       memoized
     else
@@ -24,13 +25,13 @@ defmodule AdventOfCode.Day10 do
         0
       else
         count = countPermutations(hd, tail) + countPermutations(curr, tail)
-        Agent.update(__MODULE__, &(Map.put(&1, curr, count)))
+        Agent.update(__MODULE__, &Map.put(&1, curr, count))
         count
       end
     end
   end
 
-  #part1
+  # part1
   defp countIncrements([_], count), do: countIncrements([], count)
   defp countIncrements([], count), do: count
 

@@ -3,9 +3,10 @@ defmodule Mix.Tasks.Aoc do
 
   @shortdoc "Run advent of code via mix aoc <day> <part>"
   def run(args) do
+    year = 2020
     [day, part | rest] = args
 
-    input = Input.getInput(2020, day)
+    input = Input.getInput(year, day)
     paddedDay = to_string(day) |> String.pad_leading(2, "0")
     module = String.to_atom("Elixir.AdventOfCode.Day" <> paddedDay)
     partFn = getPartFn(part)
@@ -20,7 +21,7 @@ defmodule Mix.Tasks.Aoc do
 
       case length(rest) do
         1 ->
-          Submit.submit(answer, 2015, day, part)
+          Submit.submit(answer, year, day, part)
           |> (fn ans -> IO.puts("Result: #{ans}") end).()
 
         _ ->
