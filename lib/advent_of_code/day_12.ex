@@ -14,17 +14,15 @@ defmodule AdventOfCode.Day12 do
 
   defp moveShipAndWaypoint(coords, [{inst, amt} | tail]) do
     case inst do
-      d when d == "L" or d == "R" -> rotate(inst, amt, coords) |> moveShipAndWaypoint(tail)
+      d when d == "L" or d == "R" -> rotate(coords, inst, amt) |> moveShipAndWaypoint(tail)
       _ -> doInstW(inst, amt, coords) |> moveShipAndWaypoint(tail)
     end
   end
 
-  defp rotate("L", 90, {x, y, wx, wy}), do: {x, y, -wy, wx}
-  defp rotate("L", 180, coords), do: rotate("L", 90, rotate("L", 90, coords))
-  defp rotate("L", 270, coords), do:  rotate("L", 90, rotate("L", 90, rotate("L", 90, coords)))
-  defp rotate("R", 90, {x, y, wx, wy}), do: {x, y, wy, -wx}
-  defp rotate("R", 180, coords), do: rotate("R", 90, rotate("R", 90, coords))
-  defp rotate("R", 270, coords), do: rotate("R", 90, rotate("R", 90, rotate("R", 90, coords)))
+  defp rotate({x, y, wx, wy}, "L", 90), do: {x, y, -wy, wx}
+  defp rotate({x, y, wx, wy}, "R", 90), do: {x, y, wy, -wx}
+  defp rotate(coords, d, 180), do: rotate(coords, d, 90) |> rotate(d, 90)
+  defp rotate(coords, d, 270), do: rotate(coords, d, 90) |> rotate(d, 90) |> rotate(d, 90)
 
   defp doInstW("F", amt, {x, y, wx, wy}), do: {x + wx * amt, y + wy * amt, wx, wy}
 

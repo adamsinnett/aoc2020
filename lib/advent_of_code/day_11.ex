@@ -1,79 +1,75 @@
 defmodule AdventOfCode.Day11 do
-  def part1(map) do
-    fillChairs(map, 0)
+  def part1(input) do
+    solve(input, &adjacent/2, 4)
   end
 
-  def part2(_input) do
+  def part2(input) do
+    solve(input, &visible/2, 5)
   end
 
-  # part1
-  defp fillChairs(map, total) do
-    chairsFilled =
-      fillChair({0, 0}, map)
-      |> Enum.values()
-      |> List.flatten()
-      |> Enum.filter(&(&1 == "#"))
-      |> length
+  def solve(input, search, allowed) do
+    input
+    |> run(search, allowed)
+    |> Map.values()
+    |> Enum.count(&(&1 == "#"))
+  end
 
-    case chairsFilled == total do
-      false -> fillChairs(map, chairsFilled)
+  def run(prev, search, allowed) do
+    new = turn(prev, search, allowed)
+
+    case Map.equal?(new, prev) do
+      true -> new
+      false -> run(new, search, allowed)
     end
   end
 
-  defp fillChair({x, y}, map) do
-    if not Map.has_key?({x, y}) do
-      map
-    else
-      seat = Map.fetch!({x, y})
-      neighbors = numberOfOccupiedNeighhbors({x, y}, map)
+  def turn(m, search, allowed) do
+    m
+    |> Enum.map(fn
+      {k, "."} -> {k, "."}
+      {k, "L"} -> {k, if(Enum.any?(search.(k, m), &(&1 == "#")), do: "L", else: "#")}
+      {k, "#"} -> {k, if(Enum.count(search.(k, m), &(&1 == "#")) >= allowed, do: "L", else: "#")}
+    end)
+    |> Map.new()
+  end
+
+  def adjacent({r, c}, m) do
+    for row <- (r - 1)..(r + 1), col <- (c - 1)..(c + 1), not (row == r and col == c) do
+      Map.get(m, {row, col}, ".")
     end
   end
 
-  defp numberOfOccupiedNeighhbors({x, y}, map) do
-    filled({x - 1, y - 1}, map) + filled({x, y - 1}, map) + filled({x + 1, y - 1}, map) +
-      filled({x - 1, y}, map) + filled({x + 1, y}, map) + filled({x - 1, y + 1}, map) +
-      filled({x, y + 1}, map) + filled({x + 1, y + 1}, map)
+  def visible({r, c}, m) do
+    [
+      fn {r, c} -> {r - 1, c} end,
+      fn {r, c} -> {r + 1, c} end,
+      fn {r, c} -> {r, c - 1} end,
+      fn {r, c} -> {r, c + 1} end,
+      fn {r, c} -> {r - 1, c - 1} end,
+      fn {r, c} -> {r + 1, c + 1} end,
+      fn {r, c} -> {r - 1, c + 1} end,
+      fn {r, c} -> {r + 1, c - 1} end
+    ]
+    |> Enum.map(&find({r, c}, m, &1))
   end
 
-  defp filled(pos, map) do
-    case Map.has_key?(pos) do
-      true ->
-        case Map.fetch!(pos) do
-          "#" -> 1
-          _ -> 0
-        end
+  def find(k, m, next) do
+    key = next.(k)
 
-      _ ->
-        0
+    case m[key] do
+      "." -> find(key, m, next)
+      nil -> "."
+      any -> any
     end
   end
 
   # input
   def parseInput(input) do
-    matrix =
-      String.split(input, "\n", trim: true)
-      |> Enum.map(&String.graphemes(&1))
-
-    maxx = matrix |> length
-    maxy = matrix |> hd |> length
-    list = List.flatten(matrix)
-
-    map =
-      Enum.reduce(
-        0..maxx,
-        %{},
-        fn x, acc ->
-          Map.merge(
-            acc,
-            Enum.reduce(
-              0..maxy,
-              %{},
-              fn y, accu -> Map.put(accu, {x, y}, Enum.at(list, x * maxy + y)) end
-            )
-          )
-        end
-      )
-
-    {map, maxx, maxy}
+    String.split(input, "\n", trim: true)
+    |> Enum.map(&String.graphemes/1)
+    |> Enum.map(&Enum.with_index/1)
+    |> Enum.with_index()
+    |> Enum.flat_map(fn {rs, r} -> Enum.map(rs, fn {seat, c} -> {{r, c}, seat} end) end)
+    |> Map.new()
   end
 end
