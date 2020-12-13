@@ -34,23 +34,27 @@ defmodule AdventOfCode.Day11 do
   end
 
   def adjacent({r, c}, m) do
-    for row <- (r - 1)..(r + 1), col <- (c - 1)..(c + 1), not (row == r and col == c) do
+    for row <- (r - 1)..(r + 1),
+        col <- (c - 1)..(c + 1),
+        not (row == r and col == c) do
       Map.get(m, {row, col}, ".")
     end
   end
 
   def visible({r, c}, m) do
-    [
-      fn {r, c} -> {r - 1, c} end,
-      fn {r, c} -> {r + 1, c} end,
-      fn {r, c} -> {r, c - 1} end,
-      fn {r, c} -> {r, c + 1} end,
-      fn {r, c} -> {r - 1, c - 1} end,
-      fn {r, c} -> {r + 1, c + 1} end,
-      fn {r, c} -> {r - 1, c + 1} end,
-      fn {r, c} -> {r + 1, c - 1} end
-    ]
-    |> Enum.map(&find({r, c}, m, &1))
+    Enum.map(
+      [
+        fn {r, c} -> {r - 1, c} end,
+        fn {r, c} -> {r + 1, c} end,
+        fn {r, c} -> {r, c - 1} end,
+        fn {r, c} -> {r, c + 1} end,
+        fn {r, c} -> {r - 1, c - 1} end,
+        fn {r, c} -> {r + 1, c + 1} end,
+        fn {r, c} -> {r - 1, c + 1} end,
+        fn {r, c} -> {r + 1, c - 1} end
+      ],
+      &find({r, c}, m, &1)
+    )
   end
 
   def find(k, m, next) do
