@@ -15,16 +15,14 @@ defmodule AdventOfCode.Day13 do
   defp chineseRemainerTherom(lines) do
     product = Enum.reduce(lines, 1, fn {m, _}, acc -> m * acc end)
 
-    Enum.map(lines, &step(&1, product))
+    Enum.map(lines, fn {m, r} ->
+      div(product, m)
+      |> findEgcd(m, 1)
+      |> (fn {ndiv, s} -> r * s * ndiv end).()
+    end)
     |> Enum.sum()
     |> rem(product)
     |> (fn x -> product - x end).()
-  end
-
-  defp step({m, r}, product) do
-    div(product, m)
-    |> findEgcd(m, 1)
-    |> (fn {ndiv, s} -> r * s * ndiv end).()
   end
 
   def findEgcd(ndiv, m, s) do
