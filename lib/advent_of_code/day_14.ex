@@ -40,6 +40,6 @@ defmodule AdventOfCode.Day14 do
   end
 
   defp parse("mask = " <> mask), do: {:mask, String.graphemes(mask) |> Enum.reverse() |> Enum.with_index()}
-  defp parse("mem[" <> cmd), do: Regex.run(~r/(\d+)\]\s=\s(\d+)/, cmd) |> parseMem
-  defp parseMem([_, mem, value]), do: {:mem, String.to_integer(mem), String.to_integer(value)}
+  defp parse("mem[" <> cmd), do: Regex.run(~r/(\d+)\]\s=\s(\d+)/, cmd) |> parse
+  defp parse([_, mem, value]), do: {:mem, String.to_integer(mem), String.to_integer(value)}
 end
