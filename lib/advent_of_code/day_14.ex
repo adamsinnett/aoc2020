@@ -39,18 +39,7 @@ defmodule AdventOfCode.Day14 do
     |> Enum.map(&parse/1)
   end
 
-  defp parse(cmd) do
-    case String.match?(cmd, ~r/mask\s=\s[X\d]+/) do
-      true -> Regex.run(~r/mask\s=\s([X\d]+)/, cmd) |> parseMask
-      false -> Regex.run(~r/mem\[(\d+)\]\s=\s(\d+)/, cmd) |> parseMem
-    end
-  end
-
-  defp parseMask([_, mask]) do
-    {:mask, String.graphemes(mask) |> Enum.reverse() |> Enum.with_index()}
-  end
-
-  defp parseMem([_, mem, value]) do
-    {:mem, String.to_integer(mem), String.to_integer(value)}
-  end
+  defp parse("mask = " <> mask), do: {:mask, String.graphemes(mask) |> Enum.reverse() |> Enum.with_index()}
+  defp parse("mem[" <> cmd), do: Regex.run(~r/(\d+)\]\s=\s(\d+)/, cmd) |> parseMem
+  defp parseMem([_, mem, value]), do: {:mem, String.to_integer(mem), String.to_integer(value)}
 end
