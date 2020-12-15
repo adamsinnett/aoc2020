@@ -6,6 +6,7 @@ defmodule AdventOfCode.Day14 do
 
   defp reduce([], _, mem, _), do: Map.values(mem) |> Enum.sum()
   defp reduce([{:mask, mask} | tail], _, mem, func), do: reduce(tail, mask, mem, func)
+
   defp reduce([{:mem, loc, value} | tail], mask, mem, func),
     do: reduce(tail, mask, func.(mem, loc, value, mask), func)
 
@@ -17,8 +18,10 @@ defmodule AdventOfCode.Day14 do
   end
 
   defp findLocs(loc, []), do: [loc]
+
   defp findLocs(loc, [{"X", i} | tail]),
     do: findLocs(loc &&& bnot(1 <<< i), tail) ++ findLocs(loc ||| 1 <<< i, tail)
+
   defp findLocs(loc, [{"0", _} | tail]), do: findLocs(loc, tail)
   defp findLocs(loc, [{"1", i} | tail]), do: findLocs(loc ||| 1 <<< i, tail)
 
@@ -39,7 +42,9 @@ defmodule AdventOfCode.Day14 do
     |> Enum.map(&parse/1)
   end
 
-  defp parse("mask = " <> mask), do: {:mask, String.graphemes(mask) |> Enum.reverse() |> Enum.with_index()}
+  defp parse("mask = " <> mask),
+    do: {:mask, String.graphemes(mask) |> Enum.reverse() |> Enum.with_index()}
+
   defp parse("mem[" <> cmd), do: Regex.run(~r/(\d+)\]\s=\s(\d+)/, cmd) |> parse
   defp parse([_, mem, value]), do: {:mem, String.to_integer(mem), String.to_integer(value)}
 end
