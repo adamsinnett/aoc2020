@@ -8,11 +8,11 @@ defmodule AdventOfCode.Day18 do
   end
 
   def part2(input) do
-    Enum.map(input, fn line -> String.to_charlist(line) |> :lex.string end)
+    Enum.map(input, fn line -> String.to_charlist(line) |> :lex.string() end)
     |> Enum.map(&elem(&1, 1))
-    |> Enum.map(& :parse.parse &1)
-    |> Enum.map(fn parse -> elem(parse,1) |> computeParse end)
-    |> Enum.sum
+    |> Enum.map(&:parse.parse(&1))
+    |> Enum.map(fn parse -> elem(parse, 1) |> computeParse end)
+    |> Enum.sum()
   end
 
   def computeParse({:mult, left, right}), do: computeParse(left) * computeParse(right)
@@ -26,7 +26,6 @@ defmodule AdventOfCode.Day18 do
     do: computeTree(left) + computeTree(right)
 
   def computeTree(num), do: String.to_integer(num)
-
 
   # part1
   defp buildTree([], stack), do: hd(stack)
