@@ -11,24 +11,27 @@ defmodule AdventOfCode.Day19 do
 
     Enum.filter(messages, &Enum.member?(fortytwo, String.slice(&1, 0..7)))
     |> Enum.filter(&isValid(&1, fortytwo, thirtyone, 0))
-    |> Enum.count
+    |> Enum.count()
   end
 
   defp isValid(message, fortytwo, thirtyone, count) do
     len = String.length(message)
-      case Enum.member?(fortytwo, String.slice(message, 0..7)) do
-        false -> false
 
-        true ->
-          suffix = String.slice(message, 8..len)
-          endsWith(suffix, thirtyone, count) or isValid(suffix, fortytwo, thirtyone, count + 1)
-      end
+    case Enum.member?(fortytwo, String.slice(message, 0..7)) do
+      false ->
+        false
+
+      true ->
+        suffix = String.slice(message, 8..len)
+        endsWith(suffix, thirtyone, count) or isValid(suffix, fortytwo, thirtyone, count + 1)
+    end
   end
 
   defp endsWith(_, _, count) when count < 0, do: false
 
   defp endsWith(message, thirtyone, count) do
     len = String.length(message)
+
     case Enum.member?(thirtyone, String.slice(message, 0..7)) do
       true -> endsWith(String.slice(message, 8..len), thirtyone, count - 1)
       false -> count >= 0
