@@ -2,9 +2,10 @@ defmodule AdventOfCode.Day23 do
   def part1(cups) do
     finished = playGame(cups, 0, 100)
 
-    #find one and rotate around it, but not include it
+    # find one and rotate around it, but not include it
     one = Enum.find_index(finished, &(&1 == 1))
-    Enum.drop(finished, one+1) ++ Enum.take(finished, one)
+
+    (Enum.drop(finished, one + 1) ++ Enum.take(finished, one))
     |> Enum.join("")
   end
 
